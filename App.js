@@ -4,19 +4,58 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, Image } from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
+import * as Font from 'expo-font'
+import { Ionicons } from '@expo/vector-icons'
+import { Asset, useAssets } from 'expo-asset'
 
 SplashScreen.preventAutoHideAsync()
 
+const loadFonts = fonts => fonts.map(font => Font.loadAsync(font))
+
+const loadImages = images =>
+  images.map(image => {
+    if (typeof image === 'string') return Image.prefetch(image)
+    else Asset.loadAsync(image)
+  })
+
 export default function App() {
+  const [assets] = useAssets([
+    require('./assets/snack-icon.png'),
+    'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
+  ])
+  const [loaded] = Font.useFonts(Ionicons.font)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    function prepare() {
+    async function prepare() {
       try {
         // pre-load fonts, call APIs, etc
         // 강의의 startLoading과 동일하게 동작
+        /**
+         * 이것들 다 필요없음
+         */
+        // const fonts = loadFonts([
+        //   Ionicons.font,
+        //   Ionicons.font,
+        //   Ionicons.font,
+        //   Ionicons.font,
+        //   Ionicons.font,
+        //   Ionicons.font,
+        //   Ionicons.font
+        // ])
+        // console.log(fonts)
+        // const images = loadImages([
+        //   './assets/snack-icon.png',
+        //   'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
+        // ])
+        // await Promise.all([...fonts, ...images])
+        // console.log(images)
+        // // await Asset.loadAsync(require('./assets/snack-icon.png'))
+        // // await Image.prefetch(
+        // //   'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
+        // // )
       } catch (error) {
         // 강의의 onError와 동일하게 동작
         console.warn(error)

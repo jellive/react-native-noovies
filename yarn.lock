@@ -7037,6 +7037,8 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     expo: "npm:~51.0.26"
+    expo-asset: "npm:~10.0.10"
+    expo-font: "npm:~12.0.9"
     expo-splash-screen: "npm:~0.27.5"
     expo-status-bar: "npm:~1.12.1"
     react: "npm:18.2.0"
