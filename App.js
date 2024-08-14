@@ -9,6 +9,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons'
 import { Asset, useAssets } from 'expo-asset'
+import { NavigationContainer } from '@react-navigation/native' // 설치 후 ios, android를 '커맨드'로 다시 실행해야 함. 바이너리를 새로 묶어야 하기 때문.
+import Tabs from './navigation/Tabs'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -33,29 +35,6 @@ export default function App() {
       try {
         // pre-load fonts, call APIs, etc
         // 강의의 startLoading과 동일하게 동작
-        /**
-         * 이것들 다 필요없음
-         */
-        // const fonts = loadFonts([
-        //   Ionicons.font,
-        //   Ionicons.font,
-        //   Ionicons.font,
-        //   Ionicons.font,
-        //   Ionicons.font,
-        //   Ionicons.font,
-        //   Ionicons.font
-        // ])
-        // console.log(fonts)
-        // const images = loadImages([
-        //   './assets/snack-icon.png',
-        //   'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
-        // ])
-        // await Promise.all([...fonts, ...images])
-        // console.log(images)
-        // // await Asset.loadAsync(require('./assets/snack-icon.png'))
-        // // await Image.prefetch(
-        // //   'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
-        // // )
       } catch (error) {
         // 강의의 onError와 동일하게 동작
         console.warn(error)
@@ -72,13 +51,11 @@ export default function App() {
     if (ready) await SplashScreen.hideAsync()
   }, [ready])
 
-  if (!ready) {
-    return null
-  }
-
   return (
-    <View onLayout={onLayoutRootView}>
-      <Text>We are done Loading !</Text>
+    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Tabs />
+      </NavigationContainer>
     </View>
   )
 }
