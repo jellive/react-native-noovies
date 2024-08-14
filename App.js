@@ -53,7 +53,7 @@ export default function App() {
 
   return (
     <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <NavigationContainer>
+      <NavigationContainer ㅑㅜㅑㅅ>
         <Tabs />
       </NavigationContainer>
     </View>
