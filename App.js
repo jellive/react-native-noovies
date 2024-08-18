@@ -59,7 +59,12 @@ export default function App() {
 
   return (
     <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
+      <NavigationContainer
+      /**
+       * @desc 다크 테마 내장으로 적용하기
+       */
+      // theme={isDark ? DarkTheme : DefaultTheme}
+      >
         <Tabs />
       </NavigationContainer>
     </View>
