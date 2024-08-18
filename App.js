@@ -16,6 +16,7 @@ import {
 } from '@react-navigation/native' // 설치 후 ios, android를 '커맨드'로 다시 실행해야 함. 바이너리를 새로 묶어야 하기 때문.
 import Tabs from './navigation/Tabs'
 import Stack from './navigation/Stack'
+import Root from './navigation/Root'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -67,7 +68,8 @@ export default function App() {
       // theme={isDark ? DarkTheme : DefaultTheme}
       >
         {/* <Tabs /> */}
-        <Stack />
+        {/* <Stack /> */}
+        <Root />
       </NavigationContainer>
     </View>
   )

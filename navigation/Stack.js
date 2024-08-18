@@ -12,7 +12,7 @@ const ScreenTwo = ({ navigation: { navigate } }) => (
     <Text>go to Three</Text>
   </TouchableOpacity>
 )
-const ScreenThree = ({ navigation: { setOptions, goBack } }) => {
+const ScreenThree = ({ navigation: { navigate, setOptions, goBack } }) => {
   return (
     <>
       <TouchableOpacity onPress={() => goBack()}>
@@ -24,6 +24,13 @@ const ScreenThree = ({ navigation: { setOptions, goBack } }) => {
         style={{ marginTop: 40 }}
       >
         <Text>Change title</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigate('Tabs', { screen: 'Search' })}
+        style={{ marginTop: 40 }}
+      >
+        <Text>Go to search</Text>
       </TouchableOpacity>
     </>
   )

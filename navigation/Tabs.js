@@ -6,6 +6,7 @@ import { Text, View } from 'react-native'
 import { useColorScheme } from 'react-native'
 import { BLACK_COLOR, YELLOW_COLOR } from '../utils/colors'
 import { Ionicons } from '@expo/vector-icons'
+import Stack from './Stack'
 
 const Tab = createBottomTabNavigator()
 
@@ -61,6 +62,7 @@ const Tabs = () => {
       <Tab.Screen
         name="Movies"
         component={Movies}
+        // component={Stack}
         options={{
           //   headerTitleStyle: {
           //     color: 'tomato'
@@ -80,6 +82,7 @@ const Tabs = () => {
               />
             )
           }
+          //   headerShown: false
         }}
       />
       <Tab.Screen
