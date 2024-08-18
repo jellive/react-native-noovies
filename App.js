@@ -4,12 +4,16 @@
  */
 
 import React, { useState, useCallback, useEffect } from 'react'
-import { Text, View, Image } from 'react-native'
+import { Text, View, Image, useColorScheme } from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Font from 'expo-font'
 import { Ionicons } from '@expo/vector-icons'
 import { Asset, useAssets } from 'expo-asset'
-import { NavigationContainer } from '@react-navigation/native' // 설치 후 ios, android를 '커맨드'로 다시 실행해야 함. 바이너리를 새로 묶어야 하기 때문.
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer
+} from '@react-navigation/native' // 설치 후 ios, android를 '커맨드'로 다시 실행해야 함. 바이너리를 새로 묶어야 하기 때문.
 import Tabs from './navigation/Tabs'
 
 SplashScreen.preventAutoHideAsync()
@@ -29,6 +33,8 @@ export default function App() {
   ])
   const [loaded] = Font.useFonts(Ionicons.font)
   const [ready, setReady] = useState(false)
+
+  const isDark = useColorScheme() === 'dark'
 
   useEffect(() => {
     async function prepare() {
@@ -53,7 +59,7 @@ export default function App() {
 
   return (
     <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <NavigationContainer ㅑㅜㅑㅅ>
+      <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
         <Tabs />
       </NavigationContainer>
     </View>

@@ -13,27 +13,42 @@ const Tabs = () => {
   console.log('isDark', isDark)
   return (
     <Tab.Navigator
-      // initialRouteName="Search"
-      // screenOptions={{ tabBarLabelStyle: { backgroundColor: 'red' } }}
-      // screenOptions={{ tabBarLabelPosition: 'beside-icon' }}
-      //   screenOptions={{
-      //     tabBarActiveTintColor: 'red',
-      //     tabBarInactiveTintColor: 'purple',
-      //     tabBarStyle: { backgroundColor: 'tomato' }
-      //   }}
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: isDark ? BLACK_COLOR : 'white'
-        },
-        tabBarActiveTintColor: isDark ? YELLOW_COLOR : BLACK_COLOR,
-        tabBarInactiveTintColor: isDark ? '#d2dae2' : '#808e9b',
-        headerStyle: {
-          backgroundColor: isDark ? BLACK_COLOR : 'white'
-        },
-        headerTitleStyle: {
-          color: isDark ? 'white' : BLACK_COLOR
-        }
-      }}
+    /**
+     * @desc 초기 페이지 설정
+     */
+    // initialRouteName="Search"
+    /**
+     * @desc 탭바 배경 설정
+     */
+    // screenOptions={{ tabBarLabelStyle: { backgroundColor: 'red' } }}
+    /**
+     * @desc 아이콘 배치 설정
+     */
+    // screenOptions={{ tabBarLabelPosition: 'beside-icon' }}
+    /**
+     * @desc 탭바 색상 세부 설정
+     */
+    //   screenOptions={{
+    //     tabBarActiveTintColor: 'red',
+    //     tabBarInactiveTintColor: 'purple',
+    //     tabBarStyle: { backgroundColor: 'tomato' }
+    //   }}
+    /**
+     * @desc 다크모드 유무에 따른 탭바 색상 세부 설정
+     */
+    //   screenOptions={{
+    //     tabBarStyle: {
+    //       backgroundColor: isDark ? BLACK_COLOR : 'white'
+    //     },
+    //     tabBarActiveTintColor: isDark ? YELLOW_COLOR : BLACK_COLOR,
+    //     tabBarInactiveTintColor: isDark ? '#d2dae2' : '#808e9b',
+    //     headerStyle: {
+    //       backgroundColor: isDark ? BLACK_COLOR : 'white'
+    //     },
+    //     headerTitleStyle: {
+    //       color: isDark ? 'white' : BLACK_COLOR
+    //     }
+    //   }}
     >
       <Tab.Screen
         name="Movies"
