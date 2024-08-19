@@ -27,6 +27,7 @@ const Movies = ({ navigation: { navigate } }) => (
     >
       <Title selected={true}>Movies</Title>
       <Title selected={false}>Movies</Title>
+      <Text>hi?</Text>
     </Btn>
     {/* </Column>
     <Footer></Footer> */}

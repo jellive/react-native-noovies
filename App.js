@@ -20,44 +20,23 @@ import Root from './navigation/Root'
 
 SplashScreen.preventAutoHideAsync()
 
-const loadFonts = fonts => fonts.map(font => Font.loadAsync(font))
-
-const loadImages = images =>
-  images.map(image => {
-    if (typeof image === 'string') return Image.prefetch(image)
-    else Asset.loadAsync(image)
-  })
-
 export default function App() {
   const [assets] = useAssets([
     require('./assets/snack-icon.png'),
     'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
   ])
   const [loaded] = Font.useFonts(Ionicons.font)
-  const [ready, setReady] = useState(false)
 
   const isDark = useColorScheme() === 'dark'
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        // pre-load fonts, call APIs, etc
-        // 강의의 startLoading과 동일하게 동작
-      } catch (error) {
-        // 강의의 onError와 동일하게 동작
-        console.warn(error)
-      } finally {
-        // 강의의 onFinish와 동일하게 동작
-        setReady(true)
-      }
-    }
-
-    prepare()
-  }, [])
-
   const onLayoutRootView = useCallback(async () => {
-    if (ready) await SplashScreen.hideAsync()
-  }, [ready])
+    if (loaded && assets) {
+      console.log('ready is true', assets, loaded)
+      await SplashScreen.hideAsync()
+    } else {
+      console.log('ready is false', assets, loaded)
+    }
+  }, [loaded, assets])
 
   return (
     <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
