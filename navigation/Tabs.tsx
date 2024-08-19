@@ -7,8 +7,14 @@ import { useColorScheme } from 'react-native'
 import { BLACK_COLOR, YELLOW_COLOR } from '../utils/colors'
 import { Ionicons } from '@expo/vector-icons'
 import Stack from './Stack'
+import { setStatusBarBackgroundColor } from 'expo-status-bar'
+import styled from 'styled-components/native'
 
 const Tab = createBottomTabNavigator()
+
+// const styledTab = styled.Tab`
+//   background-color: ${props => props.theme.mainBgColor};
+// `
 
 const Tabs = () => {
   const isDark = useColorScheme() === 'dark'
