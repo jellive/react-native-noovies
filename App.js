@@ -18,6 +18,9 @@ import Tabs from './navigation/Tabs'
 import Stack from './navigation/Stack'
 import Root from './navigation/Root'
 
+import { darkTheme, lightTheme } from './styled'
+import { ThemeProvider } from 'styled-components/native'
+
 SplashScreen.preventAutoHideAsync()
 
 export default function App() {
@@ -26,8 +29,6 @@ export default function App() {
     'https://avatars.githubusercontent.com/u/102774264?s=64&v=4'
   ])
   const [loaded] = Font.useFonts(Ionicons.font)
-
-  const isDark = useColorScheme() === 'dark'
 
   const onLayoutRootView = useCallback(async () => {
     if (loaded && assets) {
@@ -38,18 +39,22 @@ export default function App() {
     }
   }, [loaded, assets])
 
+  const isDark = useColorScheme() === 'dark'
+
   return (
-    <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <NavigationContainer
-      /**
-       * @desc 다크 테마 내장으로 적용하기
-       */
-      // theme={isDark ? DarkTheme : DefaultTheme}
-      >
-        {/* <Tabs /> */}
-        {/* <Stack /> */}
-        <Root />
-      </NavigationContainer>
-    </View>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+        <NavigationContainer
+        /**
+         * @desc 다크 테마 내장으로 적용하기
+         */
+        // theme={isDark ? DarkTheme : DefaultTheme}
+        >
+          {/* <Tabs /> */}
+          {/* <Stack /> */}
+          <Root />
+        </NavigationContainer>
+      </View>
+    </ThemeProvider>
   )
 }

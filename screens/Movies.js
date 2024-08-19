@@ -6,10 +6,11 @@ const Btn = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-color: ${props => props.theme.mainBgColor};
 `
 
 const Title = styled.Text`
-  color: ${props => (props.selected ? 'blue' : 'red')};
+  color: ${props => props => props.theme.textColor};
 `
 
 // const Header = styled.View``
@@ -25,9 +26,7 @@ const Movies = ({ navigation: { navigate } }) => (
     <Btn
       onPress={() => navigate('Stack', { screen: 'Three' })} // 바로 'Three'를 쓰면 navigation 사이를 이동하기 때문에 안 됨.
     >
-      <Title selected={true}>Movies</Title>
-      <Title selected={false}>Movies</Title>
-      <Text>hi?</Text>
+      <Title>Movies</Title>
     </Btn>
     {/* </Column>
     <Footer></Footer> */}
