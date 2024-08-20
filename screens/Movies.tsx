@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
-import { ActivityIndicator, Dimensions, StyleSheet } from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleSheet,
+  useColorScheme
+} from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Swiper from 'react-native-swiper'
 import { BlurView } from '@react-native-community/blur'
@@ -30,6 +35,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
+  const isDark = useColorScheme() === 'dark'
   const [loading, setLoading] = useState(true)
   const [nowPlaying, setNowPlaying] = useState([])
   const getNowPlaying = async () => {
@@ -60,7 +66,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
               style={StyleSheet.absoluteFill}
               source={{ uri: makeImgPath(movie.backdrop_path) }}
             />
-            <BlurView style={StyleSheet.absoluteFill} intensity={100}>
+            <BlurView
+              blurType={isDark ? 'dark' : 'light'}
+              style={StyleSheet.absoluteFill}
+              blurAmount={100}
+            >
               <Title>{movie.original_title}</Title>
             </BlurView>
           </View>
