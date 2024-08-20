@@ -34,10 +34,10 @@ const Poster = styled.Image`
   border-radius: 5px;
 `
 
-const Title = styled.Text`
+const Title = styled.Text<{ isDark: boolean }>`
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: ${props => (props.isDark ? 'white' : props.theme.textColor)};
 `
 const Wrapper = styled.View`
   flex-direction: row;
@@ -105,7 +105,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
               <Wrapper>
                 <Poster source={{ uri: makeImgPath(movie.poster_path) }} />
                 <Column>
-                  <Title>{movie.original_title}</Title>
+                  <Title isDark={isDark}>{movie.original_title}</Title>
                   {movie.vote_average > 0 && (
                     <Votes>🌟{movie.vote_average}/10</Votes>
                   )}
