@@ -28,7 +28,36 @@ const Loader = styled.View`
 
 const BgImg = styled.Image``
 
-const Title = styled.Text``
+const Poster = styled.Image`
+  width: 100px;
+  height: 160px;
+  border-radius: 5px;
+`
+
+const Title = styled.Text`
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+`
+const Wrapper = styled.View`
+  flex-direction: row;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`
+const Column = styled.View`
+  width: 40%;
+  margin-left: 15px;
+`
+
+const Overview = styled.Text`
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.8);
+`
+
+const Votes = styled(Overview)`
+  font-size: 12px;
+` // 기존 styled 확장
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -54,9 +83,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   ) : (
     <Container>
       <Swiper
+        horizontal
+        showsButtons={false}
+        autoplayTimeout={3.5}
         loop
         autoplay
-        scrollEnabled={false}
         showsPagination={false}
         containerStyle={{ width: '100%', height: SCREEN_HEIGHT / 4 }}
       >
@@ -71,7 +102,16 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
               style={StyleSheet.absoluteFill}
               blurAmount={100}
             >
-              <Title>{movie.original_title}</Title>
+              <Wrapper>
+                <Poster source={{ uri: makeImgPath(movie.poster_path) }} />
+                <Column>
+                  <Title>{movie.original_title}</Title>
+                  {movie.vote_average > 0 && (
+                    <Votes>🌟{movie.vote_average}/10</Votes>
+                  )}
+                  <Overview>{movie.overview.slice(0, 90)}...</Overview>
+                </Column>
+              </Wrapper>
             </BlurView>
           </View>
         ))}
