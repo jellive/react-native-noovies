@@ -49,8 +49,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     <Container>
       <Swiper
         loop
-        timeout={3.5}
-        controlsEnabled={false}
+        autoplay
+        scrollEnabled={false}
+        showsPagination={false}
         containerStyle={{ width: '100%', height: SCREEN_HEIGHT / 4 }}
       >
         {nowPlaying.map(movie => (
