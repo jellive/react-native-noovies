@@ -50,9 +50,10 @@ const Column = styled.View`
   margin-left: 15px;
 `
 
-const Overview = styled.Text`
+const Overview = styled.Text<{ isDark: boolean }>`
   margin-top: 10px;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${props =>
+    props.isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)'};
 `
 
 const Votes = styled(Overview)`
@@ -107,9 +108,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
                 <Column>
                   <Title isDark={isDark}>{movie.original_title}</Title>
                   {movie.vote_average > 0 && (
-                    <Votes>🌟{movie.vote_average}/10</Votes>
+                    <Votes isDark={isDark}>🌟{movie.vote_average}/10</Votes>
                   )}
-                  <Overview>{movie.overview.slice(0, 90)}...</Overview>
+                  <Overview isDark={isDark}>
+                    {movie.overview.slice(0, 90)}...
+                  </Overview>
                 </Column>
               </Wrapper>
             </BlurView>
