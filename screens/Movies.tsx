@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
-import { ActivityIndicator, Dimensions } from 'react-native'
+import { ActivityIndicator, Dimensions, ScrollView } from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Swiper from 'react-native-swiper'
 import Slide from '../components/Slide'
+import Poster from '../components/Poster'
 
 const API_KEY = '75ecfeb0448980314d98e491886dabd2'
 const nowPlayingAddr = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
 const upcomingAddr = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-const trendingAddr = `https://api.themoviedb.org/3/movie/trending/movie/week?api_key=${API_KEY}`
+const trendingAddr = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
 const Container = styled.ScrollView``
 
 const Loader = styled.View`
@@ -26,6 +27,8 @@ const ListTitle = styled.Text`
   font-weight: 600;
   margin-left: 30px;
 `
+
+const Movie = styled.View``
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
@@ -91,6 +94,13 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
       </Swiper>
       {/* Trending */}
       <ListTitle>Trending movies</ListTitle>
+      <ScrollView horizontal>
+        {trending.map(movie => (
+          <Movie key={movie.id}>
+            <Poster path={movie.poster_path} />
+          </Movie>
+        ))}
+      </ScrollView>
     </Container>
   )
 }
