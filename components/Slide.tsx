@@ -57,7 +57,7 @@ const Slide: React.FC<SlideProps> = ({
       />
       <BlurView
         blurType={isDark ? 'dark' : 'light'}
-        style={StyleSheet.absoluteFill}
+        style={StyleSheet.absoluteFill} // 같은 크기의 blur를 덮어씌워줌.
         blurAmount={100}
       >
         <Wrapper>
