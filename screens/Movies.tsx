@@ -16,11 +16,6 @@ import Poster from '../components/Poster'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
 
-const API_KEY = '75ecfeb0448980314d98e491886dabd2'
-const nowPlayingAddr = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-const upcomingAddr = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-const trendingAddr = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
-
 const Loader = styled.View`
   flex: 1;
   justify-content: center;
@@ -60,40 +55,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
   const [refreshing, setRefreshing] = useState(false)
-  const [loading, setLoading] = useState(true)
-  const [nowPlaying, setNowPlaying] = useState([])
-  const [upcoming, setUpcoming] = useState([])
-  const [trending, setTrending] = useState([])
-
-  const getTrending = async () => {
-    const { results } = await (await fetch(trendingAddr)).json()
-    setTrending(results)
-  }
-  const getUpcoming = async () => {
-    const { results } = await (await fetch(upcomingAddr)).json()
-    setUpcoming(results)
-  }
-  const getNowPlaying = async () => {
-    const { results } = await (await fetch(nowPlayingAddr)).json()
-    setNowPlaying(results)
-    setLoading(false)
-  }
-
-  const getData = async () => {
-    // wait for all of them
-    await Promise.all([getTrending(), getUpcoming(), getNowPlaying()])
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    getData()
-  }, [])
-
-  const onRefresh = async () => {
-    setRefreshing(true)
-    await getData()
-    setRefreshing(false)
-  }
+  const onRefresh = async () => {}
 
   const renderVMedia = ({ item }) => (
     <VMedia
