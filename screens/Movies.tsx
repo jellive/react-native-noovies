@@ -20,7 +20,6 @@ const API_KEY = '75ecfeb0448980314d98e491886dabd2'
 const nowPlayingAddr = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
 const upcomingAddr = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=kr`
 const trendingAddr = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
-const Container = styled.ScrollView``
 
 const Loader = styled.View`
   flex: 1;
@@ -48,6 +47,13 @@ const ListContainer = styled.View`
 
 const ComingSoonTitle = styled(ListTitle)`
   margin-vertical: 20px;
+`
+
+const VSeparator = styled.View`
+  width: 20px;
+`
+const HSeparator = styled.View`
+  width: 20px;
 `
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
@@ -89,6 +95,26 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     setRefreshing(false)
   }
 
+  const renderVMedia = ({ item }) => (
+    <VMedia
+      posterPath={item.poster_path}
+      originalTitle={item.original_title}
+      voteAverage={item.vote_average}
+    />
+  )
+
+  const renderHMedia = ({ item }) => (
+    <HMedia
+      key={item.id}
+      posterPath={item.poster_path}
+      originalTitle={item.original_title}
+      overview={item.overview}
+      releaseDate={item.release_date}
+    />
+  )
+
+  const movieKeyExtractor = item => item.id + ''
+
   return loading ? (
     <Loader>
       <ActivityIndicator />
@@ -96,17 +122,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   ) : (
     <FlatList
       data={upcoming}
-      keyExtractor={item => item.id + ''}
-      ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-      renderItem={({ item }) => (
-        <HMedia
-          key={item.id}
-          posterPath={item.poster_path}
-          originalTitle={item.original_title}
-          overview={item.overview}
-          releaseDate={item.release_date}
-        />
-      )}
+      keyExtractor={movieKeyExtractor}
+      ItemSeparatorComponent={HSeparator}
+      renderItem={renderHMedia}
       ListHeaderComponent={
         // FlatList 위 (가로 flatlist, title 등 전부)를 모두 포괄하면 됨.
         <>
@@ -140,17 +158,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
           <TrendingScroll
             data={trending}
             horizontal
-            keyExtractor={item => item.id + ''}
+            keyExtractor={movieKeyExtractor}
             contentContainerStyle={{ paddingHorizontal: 20 }}
             showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-            renderItem={({ item }) => (
-              <VMedia
-                posterPath={item.poster_path}
-                originalTitle={item.original_title}
-                voteAverage={item.vote_average}
-              />
-            )}
+            ItemSeparatorComponent={VSeparator}
+            renderItem={renderVMedia}
           />
           <ComingSoonTitle>Comming soon</ComingSoonTitle>
         </>
