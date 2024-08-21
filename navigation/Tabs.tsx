@@ -58,7 +58,7 @@ const Tabs = () => {
       //     }
       //   }}
       screenOptions={{
-        unmountOnBlur: true, // 보통 react-navigator는 화면을 벗어날 때 컴포넌트를 죽이진 않는다. 이를 쓰면 unmount 하게 됨. 이로 메모리와 state 초기화를 확보할 수 있다. 이를 테면 slider의 현재 페이지 수.
+        unmountOnBlur: true, // 보통 react-navigator는 화면을 벗어날 때 컴포넌트를 죽이진 않는다. 이를 쓰면 unmount 하게 됨. 이로 메모리와 state 초기화를 확보할 수 있다. 이를 테면 slider의 현재 페이지 수. (react-query의 cache에는 영향을 끼치지 않음.)
         tabBarLabelStyle: {
           marginTop: -5,
           fontSize: 10,
