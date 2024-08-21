@@ -20,6 +20,13 @@ const Loader = styled.View`
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
+const ListTitle = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 30px;
+`
+
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
@@ -57,6 +64,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     </Loader>
   ) : (
     <Container>
+      {/* Now plaing */}
       <Swiper
         horizontal
         showsButtons={false}
@@ -64,7 +72,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
         loop
         autoplay
         showsPagination={false}
-        containerStyle={{ width: '100%', height: SCREEN_HEIGHT / 4 }}
+        containerStyle={{
+          marginBottom: 30,
+          width: '100%',
+          height: SCREEN_HEIGHT / 4
+        }}
       >
         {nowPlaying.map(movie => (
           <Slide
@@ -77,6 +89,8 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
           />
         ))}
       </Swiper>
+      {/* Trending */}
+      <ListTitle>Trending movies</ListTitle>
     </Container>
   )
 }
