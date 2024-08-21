@@ -15,6 +15,8 @@ import Slide from '../components/Slide'
 import Poster from '../components/Poster'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
+import { useQuery } from 'react-query'
+import { moviesApi } from '../api'
 
 const Loader = styled.View`
   flex: 1;
@@ -48,13 +50,28 @@ const VSeparator = styled.View`
   width: 20px;
 `
 const HSeparator = styled.View`
-  width: 20px;
+  height: 20px;
 `
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
   const [refreshing, setRefreshing] = useState(false)
+  const {
+    isLoading: nowPlayingLoading,
+    error: nowPlayingError,
+    data: nowPlayingData
+  } = useQuery('nowPlaying', moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
+  const {
+    isLoading: upcomingLoading,
+    error: upcomingError,
+    data: upcomingData
+  } = useQuery('upcoming', moviesApi.upcoming)
+  const {
+    isLoading: trendingLoading,
+    error: trendingError,
+    data: trendingData
+  } = useQuery('trending', moviesApi.trending)
   const onRefresh = async () => {}
 
   const renderVMedia = ({ item }) => (
@@ -76,14 +93,14 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   )
 
   const movieKeyExtractor = item => item.id + ''
-
+  const loading = nowPlayingLoading || upcomingLoading || trendingLoading
   return loading ? (
     <Loader>
       <ActivityIndicator />
     </Loader>
   ) : (
     <FlatList
-      data={upcoming}
+      data={upcomingData.results}
       keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeparator}
       renderItem={renderHMedia}
@@ -104,7 +121,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
               height: SCREEN_HEIGHT / 4
             }}
           >
-            {nowPlaying.map(movie => (
+            {nowPlayingData.results.map(movie => (
               <Slide
                 key={movie.id}
                 backdrop_path={movie.backdrop_path}
@@ -118,7 +135,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
           {/* Trending */}
           <ListTitle>Trending movies</ListTitle>
           <TrendingScroll
-            data={trending}
+            data={trendingData.results}
             horizontal
             keyExtractor={movieKeyExtractor}
             contentContainerStyle={{ paddingHorizontal: 20 }}
