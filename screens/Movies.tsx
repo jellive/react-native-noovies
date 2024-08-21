@@ -28,7 +28,26 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `
 
-const Movie = styled.View``
+const TrendingScroll = styled.ScrollView`
+  margin-top: 20px;
+`
+
+const Movie = styled.View`
+  margin-right: 20px;
+  align-items: center;
+`
+
+const Votes = styled.Text`
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
+`
+
+const Title = styled.Text`
+  color: white;
+  font-weight: 600;
+  margin-top: 7px;
+  margin-bottom: 5px;
+`
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
@@ -94,13 +113,22 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
       </Swiper>
       {/* Trending */}
       <ListTitle>Trending movies</ListTitle>
-      <ScrollView horizontal>
+      <TrendingScroll
+        contentContainerStyle={{ paddingLeft: 30 }}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      >
         {trending.map(movie => (
           <Movie key={movie.id}>
             <Poster path={movie.poster_path} />
+            <Title>
+              {movie.original_title.slice(0, 13)}
+              {movie.original_title.length > 13 && '...'}
+            </Title>
+            <Votes>🌟{movie.vote_average}/10</Votes>
           </Movie>
         ))}
-      </ScrollView>
+      </TrendingScroll>
     </Container>
   )
 }
