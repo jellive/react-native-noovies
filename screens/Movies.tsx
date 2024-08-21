@@ -108,6 +108,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
         />
       )}
       ListHeaderComponent={
+        // FlatList 위 (가로 flatlist, title 등 전부)를 모두 포괄하면 됨.
         <>
           {/* Now plaing */}
           <Swiper
