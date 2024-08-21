@@ -62,7 +62,22 @@ const Tabs = () => {
           marginTop: -5,
           fontSize: 10,
           fontWeight: 600
+        },
+        tabBarStyle: {
+          backgroundColor: isDark ? BLACK_COLOR : 'white'
+        },
+        tabBarActiveTintColor: isDark ? YELLOW_COLOR : BLACK_COLOR,
+        tabBarInactiveTintColor: isDark ? '#d2dae2' : '#808e9b',
+        headerStyle: {
+          backgroundColor: isDark ? BLACK_COLOR : 'white'
+        },
+        headerTitleStyle: {
+          color: isDark ? 'white' : BLACK_COLOR
         }
+      }}
+      sceneContainerStyle={{
+        // 전체 화면의 스타일
+        backgroundColor: isDark ? BLACK_COLOR : 'white'
       }}
     >
       <Tab.Screen

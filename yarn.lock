@@ -1712,6 +1712,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/blur@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "@react-native-community/blur@npm:4.4.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/898a886f0ae176636be87286066d03411ad6d9ac28361f1aae5c40c37d3b42d3f0ecbae4f36ed6cddb645f02e1df3027636a372e479a75880c793482530e53c2
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:13.6.9":
   version: 13.6.9
   resolution: "@react-native-community/cli-clean@npm:13.6.9"
@@ -7228,7 +7238,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -7366,6 +7376,7 @@ __metadata:
   resolution: "react-native-noovies@workspace:."
   dependencies:
     "@babel/core": "npm:^7.20.0"
+    "@react-native-community/blur": "npm:^4.4.0"
     "@react-navigation/bottom-tabs": "npm:^6.6.1"
     "@react-navigation/native": "npm:^6.1.18"
     "@react-navigation/native-stack": "npm:^6.11.0"
@@ -7382,6 +7393,8 @@ __metadata:
     react-native: "npm:0.74.5"
     react-native-safe-area-context: "npm:4.10.5"
     react-native-screens: "npm:3.31.1"
+    react-native-swiper: "npm:^1.6.0"
+    react-native-web-swiper: "npm:^2.2.4"
     styled-components: "npm:^6.1.12"
     typescript: "npm:^5.5.4"
   languageName: unknown
@@ -7407,6 +7420,26 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/899a02751ecbc6231ce3c869268fb510e5b53428c788135ae46f4bbd768efe78bf74f17fec5becc4c4c1e81a5f224a907dc890ba2406181ff9e21830dda95dec
+  languageName: node
+  linkType: hard
+
+"react-native-swiper@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "react-native-swiper@npm:1.6.0"
+  dependencies:
+    prop-types: "npm:^15.5.10"
+  checksum: 10c0/5cddf220f8a910b82220aafd1b17a51dd6d2cc2cab14304c133409b2198f88ff8de9cde016f2d1ca1e0f2c742500bc2db98db4b44317ad49feea9d68747b596e
+  languageName: node
+  linkType: hard
+
+"react-native-web-swiper@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "react-native-web-swiper@npm:2.2.4"
+  dependencies:
+    prop-types: "npm:^15.6.2"
+  peerDependencies:
+    react-native: "*"
+  checksum: 10c0/2c2a266859b88433aaff2294ced09cbfa01c21ee2ca6a30dfd4218412266e83dd73f659e3f431d595c3c8c361460b6ae2a662eb4c064f8994ad4c4041b7a8c4e
   languageName: node
   linkType: hard
 
