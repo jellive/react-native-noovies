@@ -47,7 +47,7 @@ const ListContainer = styled.View`
 `
 
 const ComingSoonTitle = styled(ListTitle)`
-  margin-bottom: 20px;
+  margin-vertical: 20px;
 `
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
@@ -94,64 +94,69 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* Now plaing */}
-      <Swiper
-        horizontal
-        showsButtons={false}
-        autoplayTimeout={3.5}
-        loop
-        autoplay
-        showsPagination={false}
-        containerStyle={{
-          marginBottom: 30,
-          width: '100%',
-          height: SCREEN_HEIGHT / 4
-        }}
-      >
-        {nowPlaying.map(movie => (
-          <Slide
-            key={movie.id}
-            backdrop_path={movie.backdrop_path}
-            poster_path={movie.poster_path}
-            original_title={movie.original_title}
-            vote_average={movie.vote_average}
-            overview={movie.overview}
-          />
-        ))}
-      </Swiper>
-      {/* Trending */}
-      <ListTitle>Trending movies</ListTitle>
-      <TrendingScroll
-        data={trending}
-        horizontal
-        keyExtractor={item => item.id + ''}
-        contentContainerStyle={{ paddingHorizontal: 20 }}
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-        renderItem={({ item }) => (
-          <VMedia
-            posterPath={item.poster_path}
-            originalTitle={item.original_title}
-            voteAverage={item.vote_average}
-          />
-        )}
-      />
-      <ComingSoonTitle>Comming soon</ComingSoonTitle>
-      {upcoming.map(movie => (
+    <FlatList
+      data={upcoming}
+      keyExtractor={item => item.id + ''}
+      ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+      renderItem={({ item }) => (
         <HMedia
-          key={movie.id}
-          posterPath={movie.poster_path}
-          originalTitle={movie.original_title}
-          overview={movie.overview}
-          releaseDate={movie.release_date}
+          key={item.id}
+          posterPath={item.poster_path}
+          originalTitle={item.original_title}
+          overview={item.overview}
+          releaseDate={item.release_date}
         />
-      ))}
-    </Container>
+      )}
+      ListHeaderComponent={
+        <>
+          {/* Now plaing */}
+          <Swiper
+            horizontal
+            showsButtons={false}
+            autoplayTimeout={3.5}
+            loop
+            autoplay
+            showsPagination={false}
+            containerStyle={{
+              marginBottom: 30,
+              width: '100%',
+              height: SCREEN_HEIGHT / 4
+            }}
+          >
+            {nowPlaying.map(movie => (
+              <Slide
+                key={movie.id}
+                backdrop_path={movie.backdrop_path}
+                poster_path={movie.poster_path}
+                original_title={movie.original_title}
+                vote_average={movie.vote_average}
+                overview={movie.overview}
+              />
+            ))}
+          </Swiper>
+          {/* Trending */}
+          <ListTitle>Trending movies</ListTitle>
+          <TrendingScroll
+            data={trending}
+            horizontal
+            keyExtractor={item => item.id + ''}
+            contentContainerStyle={{ paddingHorizontal: 20 }}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
+            renderItem={({ item }) => (
+              <VMedia
+                posterPath={item.poster_path}
+                originalTitle={item.original_title}
+                voteAverage={item.vote_average}
+              />
+            )}
+          />
+          <ComingSoonTitle>Comming soon</ComingSoonTitle>
+        </>
+      }
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+    />
   )
 }
 
