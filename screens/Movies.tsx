@@ -10,6 +10,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Swiper from 'react-native-swiper'
 import Slide from '../components/Slide'
 import Poster from '../components/Poster'
+import HMedia from '../components/HMedia'
+import VMedia from '../components/VMedia'
 
 const API_KEY = '75ecfeb0448980314d98e491886dabd2'
 const nowPlayingAddr = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
@@ -37,52 +39,12 @@ const TrendingScroll = styled.ScrollView`
   margin-top: 20px;
 `
 
-const Movie = styled.View`
-  margin-right: 20px;
-  align-items: center;
-`
-
-const Title = styled.Text`
-  color: white;
-  font-weight: 600;
-  margin-top: 7px;
-  margin-bottom: 5px;
-`
-
-const Votes = styled.Text`
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 10px;
-`
-
 const ListContainer = styled.View`
   margin-bottom: 40px;
 `
 
-const HMovie = styled.View`
-  padding: 0px 30px;
-  margin-bottom: 30px;
-  flex-direction: row;
-`
-
-const HColumn = styled.View`
-  margin-left: 15px;
-  width: 80%;
-`
-
-const Overview = styled.Text`
-  color: white;
-  opacity: 0.8;
-  width: 80%;
-`
-
-const Release = styled.Text`
-  color: white;
-  font-size: 12px;
-  margin-vertical: 10px;
-`
-
 const ComingSoonTitle = styled(ListTitle)`
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 `
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
@@ -168,42 +130,24 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
           showsHorizontalScrollIndicator={false}
         >
           {trending.map(movie => (
-            <Movie key={movie.id}>
-              <Poster path={movie.poster_path} />
-              <Title>
-                {movie.original_title.slice(0, 13)}
-                {movie.original_title.length > 13 && '...'}
-              </Title>
-              <Votes>
-                {movie.vote_average > 0
-                  ? `🌟${movie.vote_average}/10`
-                  : 'Coming soon'}
-              </Votes>
-            </Movie>
+            <VMedia
+              key={movie.id}
+              posterPath={movie.poster_path}
+              originalTitle={movie.original_title}
+              voteAverage={movie.vote_average}
+            />
           ))}
         </TrendingScroll>
       </ListContainer>
       <ComingSoonTitle>Comming soon</ComingSoonTitle>
       {upcoming.map(movie => (
-        <HMovie key={movie.id}>
-          <Poster path={movie.poster_path} />
-          <HColumn>
-            <Title>{movie.original_title}</Title>
-            <Release>
-              {new Date(movie.release_date).toLocaleDateString('ko', {
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-              })}
-              {/*  원하는 형식으로 뽑아낼 수 있음. */}
-            </Release>
-            <Overview>
-              {movie.overview !== '' && movie.overview.length > 13
-                ? `${movie.overview.slice(0, 140)}...`
-                : movie.overview}
-            </Overview>
-          </HColumn>
-        </HMovie>
+        <HMedia
+          key={movie.id}
+          posterPath={movie.poster_path}
+          originalTitle={movie.original_title}
+          overview={movie.overview}
+          releaseDate={movie.release_date}
+        />
       ))}
     </Container>
   )
