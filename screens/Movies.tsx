@@ -15,7 +15,7 @@ import Slide from '../components/Slide'
 import Poster from '../components/Poster'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
-import { useQuery } from 'react-query'
+import { QueryClient, useQuery, useQueryClient } from 'react-query'
 import { moviesApi } from '../api'
 
 const Loader = styled.View`
@@ -56,31 +56,27 @@ const HSeparator = styled.View`
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
+  const queryClient = useQueryClient() // QueryClient가 대빵임.
   const {
     isLoading: nowPlayingLoading,
     error: nowPlayingError,
     data: nowPlayingData,
-    refetch: refetchNowPlaying,
     isRefetching: isRefetchingNotPlaying
-  } = useQuery('nowPlaying', moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
+  } = useQuery(['movies', 'nowPlaying'], moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
   const {
     isLoading: upcomingLoading,
     error: upcomingError,
     data: upcomingData,
-    refetch: refetchUpcoming,
     isRefetching: isRefetchingUpcoming
-  } = useQuery('upcoming', moviesApi.upcoming)
+  } = useQuery(['movies', 'upcoming'], moviesApi.upcoming)
   const {
     isLoading: trendingLoading,
     error: trendingError,
     data: trendingData,
-    refetch: refetchTrending,
     isRefetching: isRefetchingTrending
-  } = useQuery('trending', moviesApi.trending)
+  } = useQuery(['movies', 'trending'], moviesApi.trending)
   const onRefresh = async () => {
-    refetchNowPlaying()
-    refetchUpcoming()
-    refetchTrending()
+    queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
   }
 
   const renderVMedia = ({ item }) => (
