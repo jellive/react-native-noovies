@@ -17,22 +17,10 @@ import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
 import { QueryClient, useQuery, useQueryClient } from 'react-query'
 import { Movie, MovieResponse, moviesApi } from '../api'
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  background-color: ${props => props.theme.mainBgColor};
-`
+import Loader from '../components/Loader'
+import HList from '../components/HList'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
-
-const ListTitle = styled.Text`
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 30px;
-`
 
 // styled-component에 소속된 FlatList가 아닌 react-native의 FlatList로 치환.
 const TrendingScroll = styled(FlatList<Movie>)`
@@ -41,8 +29,12 @@ const TrendingScroll = styled(FlatList<Movie>)`
 // as unknown as typeof FlatList // 이렇게 ts로 강제 캐스팅 해도 됨.
 // https://stackoverflow.com/questions/64460114/rn-flatlist-with-typescript-and-styled-components
 
-const ListContainer = styled.View`
-  margin-bottom: 40px;
+const ListTitle = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 30px;
+  margin-bottom: 20px;
 `
 
 const ComingSoonTitle = styled(ListTitle)`
@@ -106,9 +98,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     isRefetchingNotPlaying || isRefetchingUpcoming || isRefetchingTrending
   console.log('refresh', refreshing)
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <Loader />
   ) : upcomingData ? (
     <FlatList
       data={upcomingData.results}
@@ -144,17 +134,8 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
             ))}
           </Swiper>
           {/* Trending */}
-          <ListTitle>Trending movies</ListTitle>
           {trendingData ? (
-            <TrendingScroll
-              data={trendingData.results}
-              horizontal
-              keyExtractor={(item: Movie, index: number) => item.id + ''}
-              contentContainerStyle={{ paddingHorizontal: 20 }}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={VSeparator}
-              renderItem={renderVMedia}
-            />
+            <HList title="Trending movies" data={trendingData.results} />
           ) : null}
           <ComingSoonTitle>Comming soon</ComingSoonTitle>
         </>
