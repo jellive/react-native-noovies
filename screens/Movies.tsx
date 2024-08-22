@@ -56,23 +56,32 @@ const HSeparator = styled.View`
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
-  const [refreshing, setRefreshing] = useState(false)
   const {
     isLoading: nowPlayingLoading,
     error: nowPlayingError,
-    data: nowPlayingData
+    data: nowPlayingData,
+    refetch: refetchNowPlaying,
+    isRefetching: isRefetchingNotPlaying
   } = useQuery('nowPlaying', moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
   const {
     isLoading: upcomingLoading,
     error: upcomingError,
-    data: upcomingData
+    data: upcomingData,
+    refetch: refetchUpcoming,
+    isRefetching: isRefetchingUpcoming
   } = useQuery('upcoming', moviesApi.upcoming)
   const {
     isLoading: trendingLoading,
     error: trendingError,
-    data: trendingData
+    data: trendingData,
+    refetch: refetchTrending,
+    isRefetching: isRefetchingTrending
   } = useQuery('trending', moviesApi.trending)
-  const onRefresh = async () => {}
+  const onRefresh = async () => {
+    refetchNowPlaying()
+    refetchUpcoming()
+    refetchTrending()
+  }
 
   const renderVMedia = ({ item }) => (
     <VMedia
@@ -94,6 +103,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
 
   const movieKeyExtractor = item => item.id + ''
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading
+  const refreshing =
+    isRefetchingNotPlaying || isRefetchingUpcoming || isRefetchingTrending
+  console.log('refresh', refreshing)
   return loading ? (
     <Loader>
       <ActivityIndicator />
