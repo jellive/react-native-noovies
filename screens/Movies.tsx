@@ -16,7 +16,7 @@ import Poster from '../components/Poster'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
 import { QueryClient, useQuery, useQueryClient } from 'react-query'
-import { moviesApi } from '../api'
+import { Movie, MovieResponse, moviesApi } from '../api'
 
 const Loader = styled.View`
   flex: 1;
@@ -62,42 +62,42 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     error: nowPlayingError,
     data: nowPlayingData,
     isRefetching: isRefetchingNotPlaying
-  } = useQuery(['movies', 'nowPlaying'], moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
+  } = useQuery<MovieResponse>(['movies', 'nowPlaying'], moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
   const {
     isLoading: upcomingLoading,
     error: upcomingError,
     data: upcomingData,
     isRefetching: isRefetchingUpcoming
-  } = useQuery(['movies', 'upcoming'], moviesApi.upcoming)
+  } = useQuery<MovieResponse>(['movies', 'upcoming'], moviesApi.upcoming)
   const {
     isLoading: trendingLoading,
     error: trendingError,
     data: trendingData,
     isRefetching: isRefetchingTrending
-  } = useQuery(['movies', 'trending'], moviesApi.trending)
+  } = useQuery<MovieResponse>(['movies', 'trending'], moviesApi.trending)
   const onRefresh = async () => {
     queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
   }
 
-  const renderVMedia = ({ item }) => (
+  const renderVMedia = ({ item }: { item: Movie }) => (
     <VMedia
-      posterPath={item.poster_path}
+      posterPath={item.poster_path || ''}
       originalTitle={item.original_title}
       voteAverage={item.vote_average}
     />
   )
 
-  const renderHMedia = ({ item }) => (
+  const renderHMedia = ({ item }: { item: Movie }) => (
     <HMedia
       key={item.id}
-      posterPath={item.poster_path}
+      posterPath={item.poster_path || ''}
       originalTitle={item.original_title}
       overview={item.overview}
       releaseDate={item.release_date}
     />
   )
 
-  const movieKeyExtractor = item => item.id + ''
+  const movieKeyExtractor = (item: Movie) => item.id + ''
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading
   const refreshing =
     isRefetchingNotPlaying || isRefetchingUpcoming || isRefetchingTrending
@@ -106,7 +106,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     <Loader>
       <ActivityIndicator />
     </Loader>
-  ) : (
+  ) : upcomingData ? (
     <FlatList
       data={upcomingData.results}
       keyExtractor={movieKeyExtractor}
@@ -129,11 +129,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
               height: SCREEN_HEIGHT / 4
             }}
           >
-            {nowPlayingData.results.map(movie => (
+            {nowPlayingData?.results.map(movie => (
               <Slide
                 key={movie.id}
-                backdrop_path={movie.backdrop_path}
-                poster_path={movie.poster_path}
+                backdrop_path={movie.backdrop_path || ''}
+                poster_path={movie.poster_path || ''}
                 original_title={movie.original_title}
                 vote_average={movie.vote_average}
                 overview={movie.overview}
@@ -142,22 +142,24 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
           </Swiper>
           {/* Trending */}
           <ListTitle>Trending movies</ListTitle>
-          <TrendingScroll
-            data={trendingData.results}
-            horizontal
-            keyExtractor={movieKeyExtractor}
-            contentContainerStyle={{ paddingHorizontal: 20 }}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={VSeparator}
-            renderItem={renderVMedia}
-          />
+          {trendingData ? (
+            <TrendingScroll
+              data={trendingData.results}
+              horizontal
+              keyExtractor={(item: Movie, index: number) => item.id + ''}
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={VSeparator}
+              renderItem={renderVMedia}
+            />
+          ) : null}
           <ComingSoonTitle>Comming soon</ComingSoonTitle>
         </>
       }
       onRefresh={onRefresh}
       refreshing={refreshing}
     />
-  )
+  ) : null
 }
 
 export default Movies
