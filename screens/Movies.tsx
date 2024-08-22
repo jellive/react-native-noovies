@@ -34,8 +34,8 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `
 
+// styled-component에 소속된 FlatList가 아닌 react-native의 FlatList로 치환.
 const TrendingScroll = styled(FlatList<Movie>)`
-  // styled-component에 소속된 FlatList가 아닌 react-native의 FlatList로 치환.
   margin-top: 20px;
 `
 // as unknown as typeof FlatList // 이렇게 ts로 강제 캐스팅 해도 됨.
