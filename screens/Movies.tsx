@@ -34,9 +34,12 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `
 
-const TrendingScroll = styled.FlatList`
+const TrendingScroll = styled(FlatList<Movie>)`
+  // styled-component에 소속된 FlatList가 아닌 react-native의 FlatList로 치환.
   margin-top: 20px;
 `
+// as unknown as typeof FlatList // 이렇게 ts로 강제 캐스팅 해도 됨.
+// https://stackoverflow.com/questions/64460114/rn-flatlist-with-typescript-and-styled-components
 
 const ListContainer = styled.View`
   margin-bottom: 40px;
