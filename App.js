@@ -20,6 +20,9 @@ import Root from './navigation/Root'
 
 import { darkTheme, lightTheme } from './styled'
 import { ThemeProvider } from 'styled-components/native'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient()
 
 SplashScreen.preventAutoHideAsync()
 
@@ -42,19 +45,21 @@ export default function App() {
   const isDark = useColorScheme() === 'dark'
 
   return (
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-      <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
-        <NavigationContainer
-        /**
-         * @desc 다크 테마 내장으로 적용하기
-         */
-        // theme={isDark ? DarkTheme : DefaultTheme}
-        >
-          {/* <Tabs /> */}
-          {/* <Stack /> */}
-          <Root />
-        </NavigationContainer>
-      </View>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+          <NavigationContainer
+          /**
+           * @desc 다크 테마 내장으로 적용하기
+           */
+          // theme={isDark ? DarkTheme : DefaultTheme}
+          >
+            {/* <Tabs /> */}
+            {/* <Stack /> */}
+            <Root />
+          </NavigationContainer>
+        </View>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }

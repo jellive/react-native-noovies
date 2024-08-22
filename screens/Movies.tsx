@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
-import { ActivityIndicator, Dimensions } from 'react-native'
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View
+} from 'react-native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import Swiper from 'react-native-swiper'
 import Slide from '../components/Slide'
-
-const API_KEY = '75ecfeb0448980314d98e491886dabd2'
-const nowPlayingAddr = `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-const upcomingAddr = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-const trendingAddr = `https://api.themoviedb.org/3/movie/trending/movie/week?api_key=${API_KEY}`
-const Container = styled.ScrollView``
+import Poster from '../components/Poster'
+import HMedia from '../components/HMedia'
+import VMedia from '../components/VMedia'
+import { QueryClient, useQuery, useQueryClient } from 'react-query'
+import { Movie, MovieResponse, moviesApi } from '../api'
 
 const Loader = styled.View`
   flex: 1;
@@ -27,72 +34,135 @@ const ListTitle = styled.Text`
   margin-left: 30px;
 `
 
+// styled-component에 소속된 FlatList가 아닌 react-native의 FlatList로 치환.
+const TrendingScroll = styled(FlatList<Movie>)`
+  margin-top: 20px;
+`
+// as unknown as typeof FlatList // 이렇게 ts로 강제 캐스팅 해도 됨.
+// https://stackoverflow.com/questions/64460114/rn-flatlist-with-typescript-and-styled-components
+
+const ListContainer = styled.View`
+  margin-bottom: 40px;
+`
+
+const ComingSoonTitle = styled(ListTitle)`
+  margin-vertical: 20px;
+`
+
+const VSeparator = styled.View`
+  width: 20px;
+`
+const HSeparator = styled.View`
+  height: 20px;
+`
+
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
-  const [loading, setLoading] = useState(true)
-  const [nowPlaying, setNowPlaying] = useState([])
-  const [upcoming, setUpcoming] = useState([])
-  const [trending, setTrending] = useState([])
-
-  const getTrending = async () => {
-    const { results } = await (await fetch(trendingAddr)).json()
-    setTrending(results)
-  }
-  const getUpcoming = async () => {
-    const { results } = await (await fetch(upcomingAddr)).json()
-    setUpcoming(results)
-  }
-  const getNowPlaying = async () => {
-    const { results } = await (await fetch(nowPlayingAddr)).json()
-    setNowPlaying(results)
-    setLoading(false)
-  }
-
-  const getData = async () => {
-    // wait for all of them
-    await Promise.all([getTrending(), getUpcoming(), getNowPlaying()])
-    setLoading(false)
+  const queryClient = useQueryClient() // QueryClient가 대빵임.
+  const {
+    isLoading: nowPlayingLoading,
+    error: nowPlayingError,
+    data: nowPlayingData,
+    isRefetching: isRefetchingNotPlaying
+  } = useQuery<MovieResponse>(['movies', 'nowPlaying'], moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
+  const {
+    isLoading: upcomingLoading,
+    error: upcomingError,
+    data: upcomingData,
+    isRefetching: isRefetchingUpcoming
+  } = useQuery<MovieResponse>(['movies', 'upcoming'], moviesApi.upcoming)
+  const {
+    isLoading: trendingLoading,
+    error: trendingError,
+    data: trendingData,
+    isRefetching: isRefetchingTrending
+  } = useQuery<MovieResponse>(['movies', 'trending'], moviesApi.trending)
+  const onRefresh = async () => {
+    queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
   }
 
-  useEffect(() => {
-    getData()
-  }, [])
+  const renderVMedia = ({ item }: { item: Movie }) => (
+    <VMedia
+      posterPath={item.poster_path || ''}
+      originalTitle={item.original_title}
+      voteAverage={item.vote_average}
+    />
+  )
+
+  const renderHMedia = ({ item }: { item: Movie }) => (
+    <HMedia
+      key={item.id}
+      posterPath={item.poster_path || ''}
+      originalTitle={item.original_title}
+      overview={item.overview}
+      releaseDate={item.release_date}
+    />
+  )
+
+  const movieKeyExtractor = (item: Movie) => item.id + ''
+  const loading = nowPlayingLoading || upcomingLoading || trendingLoading
+  const refreshing =
+    isRefetchingNotPlaying || isRefetchingUpcoming || isRefetchingTrending
+  console.log('refresh', refreshing)
   return loading ? (
     <Loader>
       <ActivityIndicator />
     </Loader>
-  ) : (
-    <Container>
-      {/* Now plaing */}
-      <Swiper
-        horizontal
-        showsButtons={false}
-        autoplayTimeout={3.5}
-        loop
-        autoplay
-        showsPagination={false}
-        containerStyle={{
-          marginBottom: 30,
-          width: '100%',
-          height: SCREEN_HEIGHT / 4
-        }}
-      >
-        {nowPlaying.map(movie => (
-          <Slide
-            key={movie.id}
-            backdrop_path={movie.backdrop_path}
-            poster_path={movie.poster_path}
-            original_title={movie.original_title}
-            vote_average={movie.vote_average}
-            overview={movie.overview}
-          />
-        ))}
-      </Swiper>
-      {/* Trending */}
-      <ListTitle>Trending movies</ListTitle>
-    </Container>
-  )
+  ) : upcomingData ? (
+    <FlatList
+      data={upcomingData.results}
+      keyExtractor={movieKeyExtractor}
+      ItemSeparatorComponent={HSeparator}
+      renderItem={renderHMedia}
+      ListHeaderComponent={
+        // FlatList 위 (가로 flatlist, title 등 전부)를 모두 포괄하면 됨.
+        <>
+          {/* Now plaing */}
+          <Swiper
+            horizontal
+            showsButtons={false}
+            autoplayTimeout={3.5}
+            loop
+            autoplay
+            showsPagination={false}
+            containerStyle={{
+              marginBottom: 30,
+              width: '100%',
+              height: SCREEN_HEIGHT / 4
+            }}
+          >
+            {nowPlayingData?.results.map(movie => (
+              <Slide
+                key={movie.id}
+                backdrop_path={movie.backdrop_path || ''}
+                poster_path={movie.poster_path || ''}
+                original_title={movie.original_title}
+                vote_average={movie.vote_average}
+                overview={movie.overview}
+              />
+            ))}
+          </Swiper>
+          {/* Trending */}
+          <ListTitle>Trending movies</ListTitle>
+          {trendingData ? (
+            <TrendingScroll
+              data={trendingData.results}
+              horizontal
+              keyExtractor={(item: Movie, index: number) => item.id + ''}
+              contentContainerStyle={{ paddingHorizontal: 20 }}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={VSeparator}
+              renderItem={renderVMedia}
+            />
+          ) : null}
+          <ComingSoonTitle>Comming soon</ComingSoonTitle>
+        </>
+      }
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+    />
+  ) : null
 }
 
 export default Movies
