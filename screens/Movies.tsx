@@ -21,23 +21,12 @@ import Loader from '../components/Loader'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
-const ListTitle = styled.Text`
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  margin-left: 30px;
-`
-
 // styled-component에 소속된 FlatList가 아닌 react-native의 FlatList로 치환.
 const TrendingScroll = styled(FlatList<Movie>)`
   margin-top: 20px;
 `
 // as unknown as typeof FlatList // 이렇게 ts로 강제 캐스팅 해도 됨.
 // https://stackoverflow.com/questions/64460114/rn-flatlist-with-typescript-and-styled-components
-
-const ListContainer = styled.View`
-  margin-bottom: 40px;
-`
 
 const ComingSoonTitle = styled(ListTitle)`
   margin-vertical: 20px;
