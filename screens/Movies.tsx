@@ -18,6 +18,7 @@ import VMedia from '../components/VMedia'
 import { QueryClient, useQuery, useQueryClient } from 'react-query'
 import { Movie, MovieResponse, moviesApi } from '../api'
 import Loader from '../components/Loader'
+import HList from '../components/HList'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -27,6 +28,14 @@ const TrendingScroll = styled(FlatList<Movie>)`
 `
 // as unknown as typeof FlatList // 이렇게 ts로 강제 캐스팅 해도 됨.
 // https://stackoverflow.com/questions/64460114/rn-flatlist-with-typescript-and-styled-components
+
+const ListTitle = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 30px;
+  margin-bottom: 20px;
+`
 
 const ComingSoonTitle = styled(ListTitle)`
   margin-vertical: 20px;
@@ -125,17 +134,8 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
             ))}
           </Swiper>
           {/* Trending */}
-          <ListTitle>Trending movies</ListTitle>
           {trendingData ? (
-            <TrendingScroll
-              data={trendingData.results}
-              horizontal
-              keyExtractor={(item: Movie, index: number) => item.id + ''}
-              contentContainerStyle={{ paddingHorizontal: 20 }}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={VSeparator}
-              renderItem={renderVMedia}
-            />
+            <HList title="Trending movies" data={trendingData.results} />
           ) : null}
           <ComingSoonTitle>Comming soon</ComingSoonTitle>
         </>
