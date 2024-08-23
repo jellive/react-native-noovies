@@ -100,10 +100,15 @@ const Detail: React.FC<DetailScreenProps> = ({
 
   useEffect(() => {
     setOptions({
-      title: 'original_title' in params ? 'Movie' : 'TV Show',
-      headerRight: () => <ShareButton />
+      title: 'original_title' in params ? 'Movie' : 'TV Show'
     })
   }, [])
+  useEffect(() => {
+    if (data)
+      setOptions({
+        headerRight: () => <ShareButton />
+      })
+  }, [data])
   console.log('data', data)
 
   const openYTLink = async (videoID: string) => {
