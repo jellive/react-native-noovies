@@ -57,6 +57,10 @@ const Slide: React.FC<SlideProps> = ({
 }: SlideProps) => {
   const navigation = useNavigation()
   const isDark = useColorScheme() === 'dark'
+
+  const goToDetail = () => {
+    navigation.navigate('Stack', { screen: 'Detail' })
+  }
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>
       {/* opacity로 만들지 않기 위해 */}
