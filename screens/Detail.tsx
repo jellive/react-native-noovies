@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Linking,
   TouchableOpacity,
-  Share
+  Share,
+  Platform
 } from 'react-native'
 import styled from 'styled-components/native'
 import { Movie, moviesApi, TV, tvApi } from '../api'
@@ -81,16 +82,27 @@ const Detail: React.FC<DetailScreenProps> = ({
     isMovie ? moviesApi.detail : tvApi.detail
   )
   const shareMedia = async () => {
-    await Share.share({
-      url: isMovie
-        ? `https://www.imdb.com/title/${data.imdb_id}`
-        : data.homepage,
-      message: params.overview,
-      title:
-        'original_title' in params
-          ? params.original_title
-          : params.original_name
-    })
+    const isAndroid = Platform.OS === 'android' // 안드로이드인지!
+    const homepage = isMovie
+      ? `https://www.imdb.com/title/${data.imdb_id}`
+      : data.homepage
+    if (isAndroid) {
+      await Share.share({
+        message: `${params.overview}\n Check it out: ${homepage}`,
+        title:
+          'original_title' in params
+            ? params.original_title
+            : params.original_name
+      })
+    } else {
+      await Share.share({
+        url: homepage,
+        title:
+          'original_title' in params
+            ? params.original_title
+            : params.original_name
+      })
+    }
   }
   const ShareButton = () => (
     <TouchableOpacity onPress={shareMedia}>
@@ -106,7 +118,7 @@ const Detail: React.FC<DetailScreenProps> = ({
   useEffect(() => {
     if (data)
       setOptions({
-        headerRight: () => <ShareButton />
+        headerRight: () => <ShareButton /> // header에 뭔가를 넣기 전에 받아야할 데이터를 꼭 확인하자.
       })
   }, [data])
   console.log('data', data)
