@@ -85,13 +85,16 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     />
   )
 
-  const renderHMedia = ({ item }: { item: Movie }) => (
+  const renderHMedia = (
+    { item }: { item: Movie } // FlatList에서는 무조건 item으로 해야한다. (movie등 맘대로 하는게 아님.)
+  ) => (
     <HMedia
       key={item.id}
       posterPath={item.poster_path || ''}
       originalTitle={item.original_title}
       overview={item.overview}
       releaseDate={item.release_date}
+      fullData={item}
     />
   )
 
@@ -132,6 +135,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
                 originalTitle={movie.original_title}
                 vote_average={movie.vote_average}
                 overview={movie.overview}
+                fullData={movie}
               />
             ))}
           </Swiper>

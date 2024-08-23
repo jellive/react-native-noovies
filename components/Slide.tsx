@@ -11,6 +11,7 @@ import { makeImgPath } from '../utils'
 import { BlurView } from '@react-native-community/blur'
 import Poster from './Poster'
 import { useNavigation } from '@react-navigation/native'
+import { Movie } from '../api'
 
 const BgImg = styled.Image``
 
@@ -46,6 +47,7 @@ interface SlideProps {
   originalTitle: string
   vote_average: number
   overview: string
+  fullData: Movie
 }
 
 const Slide: React.FC<SlideProps> = ({
@@ -53,7 +55,8 @@ const Slide: React.FC<SlideProps> = ({
   poster_path,
   originalTitle,
   vote_average,
-  overview
+  overview,
+  fullData
 }: SlideProps) => {
   const navigation = useNavigation()
   const isDark = useColorScheme() === 'dark'
@@ -63,7 +66,7 @@ const Slide: React.FC<SlideProps> = ({
     navigation.navigate('Stack', {
       screen: 'Detail',
       params: {
-        originalTitle
+        ...fullData
       }
     })
   }

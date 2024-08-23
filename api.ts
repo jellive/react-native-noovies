@@ -20,6 +20,23 @@ export interface Movie {
   vote_count: number
 }
 
+export interface TV {
+  name: string
+  original_name: string
+  origin_country: string[]
+  vote_count: number
+  backdrop_path: string | null
+  vote_average: number
+  genre_ids: number[]
+  id: number
+  original_language: string
+  overview: string
+  poster_path: string | null
+  first_air_date: string
+  popularity: number
+  media_type: string
+}
+
 interface BaseResponse {
   page: number
   total_results: number
@@ -28,6 +45,10 @@ interface BaseResponse {
 
 export interface MovieResponse extends BaseResponse {
   results: Movie[]
+}
+
+export interface TVResponse extends BaseResponse {
+  results: TV[]
 }
 
 export const moviesApi = {
@@ -45,8 +66,8 @@ export const moviesApi = {
     ).then(res => res.json()),
   search: ({ queryKey }) => {
     const [_, query] = queryKey
-    return fetch(
-      // 바보.. 여기만 {}로 묶었기 때문에 return을 해줘야됨.
+    console.log('movie query', query)
+    fetch(
       `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
     ).then(res => res.json())
   }
@@ -67,7 +88,8 @@ export const tvApi = {
     ).then(res => res.json()),
   search: ({ queryKey }) => {
     const [_, query] = queryKey
-    return fetch(
+    console.log('tv query', query)
+    fetch(
       `${BASE_URL}/search/tv?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
     ).then(res => res.json())
   }

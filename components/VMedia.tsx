@@ -4,8 +4,9 @@ import Poster from './Poster'
 import Votes from './Votes'
 import { useNavigation } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
+import { Movie, TV } from '../api'
 
-const Movie = styled.View`
+const Container = styled.View`
   align-items: center;
 `
 
@@ -20,12 +21,14 @@ interface VMediaProps {
   posterPath: string
   originalTitle: string
   voteAverage: number
+  fullData: Movie | TV
 }
 
 const VMedia: React.FC<VMediaProps> = ({
   posterPath,
   originalTitle,
-  voteAverage
+  voteAverage,
+  fullData
 }) => {
   const navigation = useNavigation() // 전역으로 navigation을 얻을 수 있음. 이로 페이지 이동이 가능.
   const goToDetail = () => {
@@ -33,20 +36,20 @@ const VMedia: React.FC<VMediaProps> = ({
     navigation.navigate('Stack', {
       screen: 'Detail',
       params: {
-        originalTitle
+        ...fullData
       }
     })
   }
   return (
     <TouchableOpacity onPress={goToDetail}>
-      <Movie>
+      <Container>
         <Poster path={posterPath} />
         <Title>
           {originalTitle.slice(0, 12)}
           {originalTitle.length > 12 ? '...' : null}
         </Title>
         <Votes votes={voteAverage} />
-      </Movie>
+      </Container>
     </TouchableOpacity>
   )
 }
