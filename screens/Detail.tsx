@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
-import { Dimensions, StyleSheet, Linking } from 'react-native'
+import { Dimensions, StyleSheet, Linking, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import { Movie, moviesApi, TV, tvApi } from '../api'
 import Poster from '../components/Poster'
@@ -69,6 +69,11 @@ const Detail: React.FC<DetailScreenProps> = ({
   navigation: { setOptions },
   route: { params }
 }) => {
+  const ShareButton = () => (
+    <TouchableOpacity>
+      <Ionicons name="share-outline" color="white" size={24} />
+    </TouchableOpacity>
+  )
   const isMovie = 'original_title' in params
   const { isLoading, data } = useQuery(
     [isMovie ? 'movies' : 'tv', params.id],
@@ -76,7 +81,8 @@ const Detail: React.FC<DetailScreenProps> = ({
   )
   useEffect(() => {
     setOptions({
-      title: 'original_title' in params ? 'Movie' : 'TV Show'
+      title: 'original_title' in params ? 'Movie' : 'TV Show',
+      headerRight: () => <ShareButton />
     })
   }, [])
   console.log('data', data)
