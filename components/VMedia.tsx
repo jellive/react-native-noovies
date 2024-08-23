@@ -29,7 +29,13 @@ const VMedia: React.FC<VMediaProps> = ({
 }) => {
   const navigation = useNavigation() // 전역으로 navigation을 얻을 수 있음. 이로 페이지 이동이 가능.
   const goToDetail = () => {
-    navigation.navigate('Stack', { screen: 'Detail' })
+    //@ts-ignore
+    navigation.navigate('Stack', {
+      screen: 'Detail',
+      params: {
+        originalTitle
+      }
+    })
   }
   return (
     <TouchableOpacity onPress={goToDetail}>

@@ -43,7 +43,7 @@ const Votes = styled(Overview)`
 interface SlideProps {
   backdrop_path: string
   poster_path: string
-  original_title: string
+  originalTitle: string
   vote_average: number
   overview: string
 }
@@ -51,7 +51,7 @@ interface SlideProps {
 const Slide: React.FC<SlideProps> = ({
   backdrop_path,
   poster_path,
-  original_title,
+  originalTitle,
   vote_average,
   overview
 }: SlideProps) => {
@@ -59,7 +59,13 @@ const Slide: React.FC<SlideProps> = ({
   const isDark = useColorScheme() === 'dark'
 
   const goToDetail = () => {
-    navigation.navigate('Stack', { screen: 'Detail' })
+    //@ts-ignore
+    navigation.navigate('Stack', {
+      screen: 'Detail',
+      params: {
+        originalTitle
+      }
+    })
   }
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>
@@ -77,7 +83,7 @@ const Slide: React.FC<SlideProps> = ({
           <Wrapper>
             <Poster path={poster_path} />
             <Column>
-              <Title isDark={isDark}>{original_title}</Title>
+              <Title isDark={isDark}>{originalTitle}</Title>
               {vote_average > 0 && (
                 <Votes isDark={isDark}>🌟{vote_average}/10</Votes>
               )}
