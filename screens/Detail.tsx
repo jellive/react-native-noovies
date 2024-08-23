@@ -10,6 +10,7 @@ import { BLACK_COLOR } from '../utils/colors'
 import { useQuery } from 'react-query'
 import Loader from '../components/Loader'
 import { Ionicons } from '@expo/vector-icons'
+import * as WebBrowser from 'expo-web-browser'
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -82,7 +83,8 @@ const Detail: React.FC<DetailScreenProps> = ({
 
   const openYTLink = async (videoID: string) => {
     const baseUrl = `http://m.youtube.com/watch?v=${videoID}`
-    await Linking.openURL(baseUrl)
+    // await Linking.openURL(baseUrl)
+    await WebBrowser.openBrowserAsync(baseUrl)
   }
 
   return (
