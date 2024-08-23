@@ -52,6 +52,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   navigation
 }) => {
   const queryClient = useQueryClient() // QueryClient가 대빵임.
+  const [refreshing, setRefreshing] = useState(false)
   const {
     isLoading: nowPlayingLoading,
     error: nowPlayingError,
@@ -71,7 +72,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     isRefetching: isRefetchingTrending
   } = useQuery<MovieResponse>(['movies', 'trending'], moviesApi.trending)
   const onRefresh = async () => {
-    queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
+    setRefreshing(true)
+    await queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
+    setRefreshing(false)
   }
 
   const renderVMedia = ({ item }: { item: Movie }) => (
@@ -94,8 +97,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
 
   const movieKeyExtractor = (item: Movie) => item.id + ''
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading
-  const refreshing =
-    isRefetchingNotPlaying || isRefetchingUpcoming || isRefetchingTrending
+
   console.log('refresh', refreshing)
   return loading ? (
     <Loader />
