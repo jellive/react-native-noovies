@@ -56,10 +56,14 @@ export const moviesApi = {
     fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}`).then(res =>
       res.json()
     ),
-  upcoming: () =>
-    fetch(
-      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-    ).then(res => res.json()),
+  upcoming: ({ pageParam }: { pageParam: number | undefined }) => {
+    console.log('pageParam', pageParam)
+    return fetch(
+      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&region=kr`
+    ).then(res => res.json())
+  },
   nowPlaying: () =>
     fetch(
       `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`

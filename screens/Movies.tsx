@@ -75,6 +75,8 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     isLoading: upcomingLoading,
     error: upcomingError,
     data: upcomingData,
+    hasNextPage,
+    fetchNextPage,
     isRefetching: isRefetchingUpcoming
   } = useInfiniteQuery<MovieResponse>(
     ['movies', 'upcoming'],
@@ -119,11 +121,13 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     />
   )
 
-  const movieKeyExtractor = (item: Movie) => item.id + ''
+  const movieKeyExtractor = (item: Movie) => item.id.toString()
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading
   const loadMore = () => {
-    alert('load more')
+    // alert('load more')
+    if (hasNextPage) fetchNextPage()
   }
+  console.log('upcomingData', upcomingData)
 
   console.log('refresh', refreshing)
   return loading ? (
