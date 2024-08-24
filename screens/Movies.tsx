@@ -15,7 +15,12 @@ import Slide from '../components/Slide'
 import Poster from '../components/Poster'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
-import { QueryClient, useQuery, useQueryClient } from 'react-query'
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient
+} from 'react-query'
 import { Movie, MovieResponse, moviesApi } from '../api'
 import Loader from '../components/Loader'
 import HList from '../components/HList'
@@ -59,12 +64,22 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     data: nowPlayingData,
     isRefetching: isRefetchingNotPlaying
   } = useQuery<MovieResponse>(['movies', 'nowPlaying'], moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
+  /**
+   * @description useInfinityQuery는 useQuery와 반환형이 다르다.
+   * results: {
+   *  pages: T
+   *  pageParams: []
+   * }
+   */
   const {
     isLoading: upcomingLoading,
     error: upcomingError,
     data: upcomingData,
     isRefetching: isRefetchingUpcoming
-  } = useQuery<MovieResponse>(['movies', 'upcoming'], moviesApi.upcoming)
+  } = useInfiniteQuery<MovieResponse>(
+    ['movies', 'upcoming'],
+    moviesApi.upcoming
+  )
   const {
     isLoading: trendingLoading,
     error: trendingError,
@@ -111,7 +126,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     <FlatList
       onEndReached={loadMore}
       onEndReachedThreshold={0.4} // onEndReached를 실행시키려는 목록의 하단에서 내용의 끝까지의 거리.
-      data={upcomingData.results}
+      data={upcomingData.pages.map(page => page.results).flat()}
       keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeparator}
       renderItem={renderHMedia}
