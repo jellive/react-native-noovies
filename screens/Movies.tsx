@@ -110,6 +110,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   ) : upcomingData ? (
     <FlatList
       onEndReached={loadMore}
+      onEndReachedThreshold={0.4} // onEndReached를 실행시키려는 목록의 하단에서 내용의 끝까지의 거리.
       data={upcomingData.results}
       keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeparator}
