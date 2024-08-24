@@ -78,7 +78,13 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     isRefetching: isRefetchingUpcoming
   } = useInfiniteQuery<MovieResponse>(
     ['movies', 'upcoming'],
-    moviesApi.upcoming
+    moviesApi.upcoming,
+    {
+      getNextPageParam: currentPage => {
+        const nextPage = currentPage.page + 1
+        return nextPage > currentPage.total_pages ? null : nextPage
+      }
+    }
   )
   const {
     isLoading: trendingLoading,
