@@ -100,12 +100,16 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
 
   const movieKeyExtractor = (item: Movie) => item.id + ''
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading
+  const loadMore = () => {
+    alert('load more')
+  }
 
   console.log('refresh', refreshing)
   return loading ? (
     <Loader />
   ) : upcomingData ? (
     <FlatList
+      onEndReached={loadMore}
       data={upcomingData.results}
       keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeparator}
