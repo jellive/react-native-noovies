@@ -92,8 +92,19 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     isLoading: trendingLoading,
     error: trendingError,
     data: trendingData,
+    hasNextPage: trendingHasNextPage,
+    fetchNextPage: trendingFetchNextPage,
     isRefetching: isRefetchingTrending
-  } = useQuery<MovieResponse>(['movies', 'trending'], moviesApi.trending)
+  } = useInfiniteQuery<MovieResponse>(
+    ['movies', 'trending'],
+    moviesApi.trending,
+    {
+      getNextPageParam: currentPage => {
+        const nextPage = currentPage.page + 1
+        return nextPage > currentPage.total_pages ? null : nextPage
+      }
+    }
+  )
   const onRefresh = async () => {
     setRefreshing(true)
     await queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
@@ -126,6 +137,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
   const loadMore = () => {
     // alert('load more')
     if (hasNextPage) fetchNextPage()
+  }
+  const trendLoadMore = () => {
+    if (trendingHasNextPage) trendingFetchNextPage()
   }
   console.log('upcomingData', upcomingData)
 
@@ -171,7 +185,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
           </Swiper>
           {/* Trending */}
           {trendingData ? (
-            <HList title="Trending movies" data={trendingData.results} />
+            <HList
+              title="Trending movies"
+              data={trendingData.pages.map(page => page.results).flat()}
+              onEndReached={trendLoadMore}
+            />
           ) : null}
           <ComingSoonTitle>Comming soon</ComingSoonTitle>
         </>

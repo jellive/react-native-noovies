@@ -52,10 +52,12 @@ export interface TVResponse extends BaseResponse {
 }
 
 export const moviesApi = {
-  trending: () =>
-    fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}`).then(res =>
-      res.json()
-    ),
+  trending: ({ pageParam }: { pageParam: number | undefined }) =>
+    fetch(
+      `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&page=${
+        pageParam ?? 1
+      }`
+    ).then(res => res.json()),
   upcoming: ({ pageParam }: { pageParam: number | undefined }) => {
     console.log('pageParam', pageParam)
     return fetch(
@@ -64,15 +66,25 @@ export const moviesApi = {
       }&region=kr`
     ).then(res => res.json())
   },
-  nowPlaying: () =>
+  nowPlaying: ({ pageParam }: { pageParam: number | undefined }) =>
     fetch(
-      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=kr`
+      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&region=kr`
     ).then(res => res.json()),
-  search: ({ queryKey }) => {
+  search: ({
+    queryKey,
+    pageParam
+  }: {
+    queryKey: any
+    pageParam: number | undefined
+  }) => {
     const [_, query] = queryKey
     console.log('movie query', query)
     return fetch(
-      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
+      `${BASE_URL}/search/movie?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&query=${query}`
     ).then(res => res.json())
   },
   detail: ({ queryKey }) => {
@@ -85,23 +97,42 @@ export const moviesApi = {
 }
 
 export const tvApi = {
-  trending: () =>
-    fetch(`${BASE_URL}/trending/tv/week?api_key=${API_KEY}`).then(res =>
-      res.json()
-    ),
-  airingToday: () =>
+  trending: ({ pageParam }: { pageParam: number | undefined }) => {
+    return fetch(
+      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&page=${pageParam ?? 1}`
+    ).then(res => res.json())
+  },
+  airingToday: ({ pageParam }: { pageParam: number | undefined }) =>
     fetch(
-      `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=en-US&page=1&region=kr`
+      `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&region=kr`
     ).then(res => res.json()),
-  topRated: () =>
-    fetch(
-      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=en-US&page=1&region=kr`
-    ).then(res => res.json()),
-  search: ({ queryKey }) => {
+  topRated: ({ pageParam }: { pageParam: number | undefined }) => {
+    console.log(
+      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&region=kr`
+    )
+    return fetch(
+      `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&region=kr`
+    ).then(res => res.json())
+  },
+  search: ({
+    queryKey,
+    pageParam
+  }: {
+    queryKey: any
+    pageParam: number | undefined
+  }) => {
     const [_, query] = queryKey
     console.log('tv query', query)
     return fetch(
-      `${BASE_URL}/search/tv?api_key=${API_KEY}&language=en-US&page=1&query=${query}`
+      `${BASE_URL}/search/tv?api_key=${API_KEY}&language=en-US&page=${
+        pageParam ?? 1
+      }&query=${query}`
     ).then(res => res.json())
   },
   detail: ({ queryKey }) => {
