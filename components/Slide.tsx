@@ -11,6 +11,7 @@ import { makeImgPath } from '../utils'
 import { BlurView } from '@react-native-community/blur'
 import Poster from './Poster'
 import { useNavigation } from '@react-navigation/native'
+import { Movie } from '../api'
 
 const BgImg = styled.Image``
 
@@ -43,23 +44,31 @@ const Votes = styled(Overview)`
 interface SlideProps {
   backdrop_path: string
   poster_path: string
-  original_title: string
+  originalTitle: string
   vote_average: number
   overview: string
+  fullData: Movie
 }
 
 const Slide: React.FC<SlideProps> = ({
   backdrop_path,
   poster_path,
-  original_title,
+  originalTitle,
   vote_average,
-  overview
+  overview,
+  fullData
 }: SlideProps) => {
   const navigation = useNavigation()
   const isDark = useColorScheme() === 'dark'
 
   const goToDetail = () => {
-    navigation.navigate('Stack', { screen: 'Detail' })
+    //@ts-ignore
+    navigation.navigate('Stack', {
+      screen: 'Detail',
+      params: {
+        ...fullData
+      }
+    })
   }
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>
@@ -77,7 +86,7 @@ const Slide: React.FC<SlideProps> = ({
           <Wrapper>
             <Poster path={poster_path} />
             <Column>
-              <Title isDark={isDark}>{original_title}</Title>
+              <Title isDark={isDark}>{originalTitle}</Title>
               {vote_average > 0 && (
                 <Votes isDark={isDark}>🌟{vote_average}/10</Votes>
               )}

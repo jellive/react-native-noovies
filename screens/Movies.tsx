@@ -15,7 +15,12 @@ import Slide from '../components/Slide'
 import Poster from '../components/Poster'
 import HMedia from '../components/HMedia'
 import VMedia from '../components/VMedia'
-import { QueryClient, useQuery, useQueryClient } from 'react-query'
+import {
+  QueryClient,
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient
+} from 'react-query'
 import { Movie, MovieResponse, moviesApi } from '../api'
 import Loader from '../components/Loader'
 import HList from '../components/HList'
@@ -59,18 +64,47 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     data: nowPlayingData,
     isRefetching: isRefetchingNotPlaying
   } = useQuery<MovieResponse>(['movies', 'nowPlaying'], moviesApi.nowPlaying) // 첫번쨰 인자는 키로, 캐싱하는 데이터의 이름이다. 이는 다음에 다시 fetch 하지 않겠다는 뜻.
+  /**
+   * @description useInfinityQuery는 useQuery와 반환형이 다르다.
+   * results: {
+   *  pages: T
+   *  pageParams: []
+   * }
+   */
   const {
     isLoading: upcomingLoading,
     error: upcomingError,
     data: upcomingData,
+    hasNextPage,
+    fetchNextPage,
     isRefetching: isRefetchingUpcoming
-  } = useQuery<MovieResponse>(['movies', 'upcoming'], moviesApi.upcoming)
+  } = useInfiniteQuery<MovieResponse>(
+    ['movies', 'upcoming'],
+    moviesApi.upcoming,
+    {
+      getNextPageParam: currentPage => {
+        const nextPage = currentPage.page + 1
+        return nextPage > currentPage.total_pages ? null : nextPage
+      }
+    }
+  )
   const {
     isLoading: trendingLoading,
     error: trendingError,
     data: trendingData,
+    hasNextPage: trendingHasNextPage,
+    fetchNextPage: trendingFetchNextPage,
     isRefetching: isRefetchingTrending
-  } = useQuery<MovieResponse>(['movies', 'trending'], moviesApi.trending)
+  } = useInfiniteQuery<MovieResponse>(
+    ['movies', 'trending'],
+    moviesApi.trending,
+    {
+      getNextPageParam: currentPage => {
+        const nextPage = currentPage.page + 1
+        return nextPage > currentPage.total_pages ? null : nextPage
+      }
+    }
+  )
   const onRefresh = async () => {
     setRefreshing(true)
     await queryClient.refetchQueries(['movies']) // movies 카테고리 전체를 refetch 한다.
@@ -85,25 +119,38 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
     />
   )
 
-  const renderHMedia = ({ item }: { item: Movie }) => (
+  const renderHMedia = (
+    { item }: { item: Movie } // FlatList에서는 무조건 item으로 해야한다. (movie등 맘대로 하는게 아님.)
+  ) => (
     <HMedia
       key={item.id}
       posterPath={item.poster_path || ''}
       originalTitle={item.original_title}
       overview={item.overview}
       releaseDate={item.release_date}
+      fullData={item}
     />
   )
 
-  const movieKeyExtractor = (item: Movie) => item.id + ''
+  const movieKeyExtractor = (item: Movie) => item.id.toString()
   const loading = nowPlayingLoading || upcomingLoading || trendingLoading
+  const loadMore = () => {
+    // alert('load more')
+    if (hasNextPage) fetchNextPage()
+  }
+  const trendLoadMore = () => {
+    if (trendingHasNextPage) trendingFetchNextPage()
+  }
+  console.log('upcomingData', upcomingData)
 
   console.log('refresh', refreshing)
   return loading ? (
     <Loader />
   ) : upcomingData ? (
     <FlatList
-      data={upcomingData.results}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.4} // onEndReached를 실행시키려는 목록의 하단에서 내용의 끝까지의 거리.
+      data={upcomingData.pages.map(page => page.results).flat()}
       keyExtractor={movieKeyExtractor}
       ItemSeparatorComponent={HSeparator}
       renderItem={renderHMedia}
@@ -129,15 +176,20 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({
                 key={movie.id}
                 backdrop_path={movie.backdrop_path || ''}
                 poster_path={movie.poster_path || ''}
-                original_title={movie.original_title}
+                originalTitle={movie.original_title}
                 vote_average={movie.vote_average}
                 overview={movie.overview}
+                fullData={movie}
               />
             ))}
           </Swiper>
           {/* Trending */}
           {trendingData ? (
-            <HList title="Trending movies" data={trendingData.results} />
+            <HList
+              title="Trending movies"
+              data={trendingData.pages.map(page => page.results).flat()}
+              onEndReached={trendLoadMore}
+            />
           ) : null}
           <ComingSoonTitle>Comming soon</ComingSoonTitle>
         </>

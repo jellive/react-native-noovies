@@ -1,6 +1,6 @@
 import react, { useState } from 'react'
 import { View, Text } from 'react-native'
-import { useQuery } from 'react-query'
+import { useQuery, useInfiniteQuery } from 'react-query'
 import styled from 'styled-components/native'
 import { moviesApi, tvApi } from '../api'
 import Loader from '../components/Loader'
@@ -22,17 +22,36 @@ const Search = () => {
   const {
     isLoading: moviesLoading,
     data: moviesData,
-    refetch: searchMovies
-  } = useQuery(['searchMovies', query], moviesApi.search, {
-    enabled: false // 시작하자마자 실행되는 걸 막아줌.
+    refetch: searchMovies,
+    hasNextPage: moviesHasNextPage,
+    fetchNextPage: moviesFetchNextPage
+  } = useInfiniteQuery(['searchMovies', query], moviesApi.search, {
+    enabled: false, // 시작하자마자 실행되는 걸 막아줌.
+    getNextPageParam: currentPage => {
+      const nextPage = currentPage.page + 1
+      return nextPage > currentPage.total_pages ? null : nextPage
+    }
   })
   const {
     isLoading: tvLoading,
     data: tvData,
-    refetch: searchTv
-  } = useQuery(['searchTv', query], tvApi.search, {
-    enabled: false // 시작하자마자 실행되는 걸 막아줌.
+    refetch: searchTv,
+    hasNextPage: tvHasNextPage,
+    fetchNextPage: tvFetchNextPage
+  } = useInfiniteQuery(['searchTv', query], tvApi.search, {
+    enabled: false, // 시작하자마자 실행되는 걸 막아줌.
+    getNextPageParam: currentPage => {
+      const nextPage = currentPage.page + 1
+      return nextPage > currentPage.total_pages ? null : nextPage
+    }
   })
+  const movieLoadMore = () => {
+    if (moviesHasNextPage) moviesFetchNextPage()
+  }
+  const tvLoadMote = () => {
+    if (tvHasNextPage) tvFetchNextPage()
+  }
+
   const onChangeText = (text: string) => {
     setQuery(text)
   }
@@ -54,9 +73,20 @@ const Search = () => {
       />
       {moviesLoading || tvLoading ? <Loader /> : null}
       {moviesData ? (
-        <HList title="Movie Results" data={moviesData.results} />
+        <HList
+          title="Movie Results"
+          data={moviesData.pages.map(item => item.results).flat()}
+          // useQuery() 때는 data.results, useInfiniteQuery()때는 pages[index].results로 가져옴
+          onEndReached={movieLoadMore}
+        />
       ) : null}
-      {tvData ? <HList title="TV Results" data={tvData.results} /> : null}
+      {tvData ? (
+        <HList
+          title="TV Results"
+          data={tvData.pages.map(item => item.results).flat()}
+          onEndReached={tvLoadMote}
+        />
+      ) : null}
     </Container>
   )
 }
